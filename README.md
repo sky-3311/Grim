@@ -7,7 +7,7 @@ GrimAC is an open source Minecraft anticheat designed for 1.21 and supports 1.8-
 ### Compiling through terminal/command prompt
 1. git clone https://github.com/GrimAnticheat/Grim.git (or click the green code button, download ZIP, then unzip it.)
 2. cd Grim
-3. gradlew build
+3. ./gradlew build
 4. The final jar is located in build/libs
 
 ### API Information
