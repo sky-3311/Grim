@@ -21,15 +21,19 @@ public class MultiInteractA extends Check implements PostPredictionCheck {
 
     private final ArrayList<String> flags = new ArrayList<>();
     private int lastEntity;
+    private boolean lastSneaking;
     private boolean hasInteracted = false;
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacketType() == PacketType.Play.Client.INTERACT_ENTITY) {
-            int entity = new WrapperPlayClientInteractEntity(event).getEntityId();
+            WrapperPlayClientInteractEntity packet = new WrapperPlayClientInteractEntity(event);
+            int entity = packet.getEntityId();
+            boolean sneaking = packet.isSneaking().orElse(false);
 
             if (hasInteracted && entity != lastEntity) {
-                String verbose = "lastEntity=" + lastEntity + ", entity=" + entity;
+                String verbose = "lastEntity=" + lastEntity + ", entity=" + entity
+                        + ", lastSneaking=" + lastSneaking + ", sneaking=" + sneaking;
                 if (player.getClientVersion().isOlderThanOrEquals(ClientVersion.V_1_8)) {
                     if (flagAndAlert(verbose) && shouldModifyPackets()) {
                         event.setCancelled(true);
@@ -41,6 +45,7 @@ public class MultiInteractA extends Check implements PostPredictionCheck {
             }
 
             lastEntity = entity;
+            lastSneaking = sneaking;
             hasInteracted = true;
         }
 
