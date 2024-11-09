@@ -20,11 +20,12 @@ import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.protocol.potion.PotionType;
 import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
 import com.github.retrooper.packetevents.protocol.world.BlockFace;
+import com.github.retrooper.packetevents.protocol.world.Direction;
+import com.github.retrooper.packetevents.protocol.world.PaintingType;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUpdateAttributes;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.bukkit.Bukkit;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.*;
@@ -170,22 +171,22 @@ public class CompensatedEntities {
             packetEntity = new PacketEntityHorse(player, uuid, entityType, position.getX(), position.getY(), position.getZ(), xRot);
         } else if (entityType == EntityTypes.SLIME || entityType == EntityTypes.MAGMA_CUBE || entityType == EntityTypes.PHANTOM) {
             packetEntity = new PacketEntitySizeable(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
+        } else if (EntityTypes.PIG.equals(entityType)) {
+            packetEntity = new PacketEntityRideable(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
+        } else if (EntityTypes.SHULKER.equals(entityType)) {
+            packetEntity = new PacketEntityShulker(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
+        } else if (EntityTypes.STRIDER.equals(entityType)) {
+            packetEntity = new PacketEntityStrider(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
+        } else if (EntityTypes.isTypeInstanceOf(entityType, EntityTypes.BOAT) || EntityTypes.CHICKEN.equals(entityType)) {
+            packetEntity = new PacketEntityTrackXRot(player, uuid, entityType, position.getX(), position.getY(), position.getZ(), xRot);
+        } else if (EntityTypes.FISHING_BOBBER.equals(entityType)) {
+            packetEntity = new PacketEntityHook(player, uuid, entityType, position.getX(), position.getY(), position.getZ(), data);
+        } else if (EntityTypes.ENDER_DRAGON.equals(entityType)) {
+            packetEntity = new PacketEntityEnderDragon(player, uuid, entityID, position.getX(), position.getY(), position.getZ());
+        } else if (entityType == EntityTypes.PAINTING) {
+            packetEntity = new PacketEntityPainting(player, uuid, position.x, position.y, position.z, data == -1 ? null : PaintingType.getById(data), Direction.getByHorizontalIndex((int) xRot));
         } else {
-            if (EntityTypes.PIG.equals(entityType)) {
-                packetEntity = new PacketEntityRideable(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
-            } else if (EntityTypes.SHULKER.equals(entityType)) {
-                packetEntity = new PacketEntityShulker(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
-            } else if (EntityTypes.STRIDER.equals(entityType)) {
-                packetEntity = new PacketEntityStrider(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
-            } else if (EntityTypes.isTypeInstanceOf(entityType, EntityTypes.BOAT) || EntityTypes.CHICKEN.equals(entityType)) {
-                packetEntity = new PacketEntityTrackXRot(player, uuid, entityType, position.getX(), position.getY(), position.getZ(), xRot);
-            } else if (EntityTypes.FISHING_BOBBER.equals(entityType)) {
-                packetEntity = new PacketEntityHook(player, uuid, entityType, position.getX(), position.getY(), position.getZ(), data);
-            } else if (EntityTypes.ENDER_DRAGON.equals(entityType)) {
-                packetEntity = new PacketEntityEnderDragon(player, uuid, entityID, position.getX(), position.getY(), position.getZ());
-            } else {
-                packetEntity = new PacketEntity(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
-            }
+            packetEntity = new PacketEntity(player, uuid, entityType, position.getX(), position.getY(), position.getZ());
         }
 
         entityMap.put(entityID, packetEntity);
