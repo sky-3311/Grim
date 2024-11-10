@@ -23,7 +23,6 @@ import com.github.retrooper.packetevents.protocol.player.GameMode;
 import com.github.retrooper.packetevents.protocol.player.InteractionHand;
 import com.github.retrooper.packetevents.protocol.world.BlockFace;
 import com.github.retrooper.packetevents.wrapper.play.client.*;
-import org.bukkit.Bukkit;
 
 public class PacketPlayerDigging extends PacketListenerAbstract {
 

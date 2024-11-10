@@ -22,7 +22,6 @@ import com.github.retrooper.packetevents.protocol.world.states.defaulttags.Block
 import com.github.retrooper.packetevents.protocol.world.states.type.StateType;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
 import com.github.retrooper.packetevents.util.Vector3d;
-import org.bukkit.Bukkit;
 import com.viaversion.viaversion.api.Via;
 import io.github.retrooper.packetevents.util.viaversion.ViaVersionUtil;
 import org.bukkit.util.Vector;

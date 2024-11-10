@@ -8,7 +8,6 @@ import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
 
-import java.util.Collections;
 
 @CheckData(name = "PositionPlace")
 public class PositionPlace extends BlockPlaceCheck {

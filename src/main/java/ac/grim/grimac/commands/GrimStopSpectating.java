@@ -28,4 +28,3 @@ public class GrimStopSpectating extends BaseCommand {
         }
     }
 }
-

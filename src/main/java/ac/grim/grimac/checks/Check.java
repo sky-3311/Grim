@@ -115,7 +115,7 @@ public class Check implements AbstractCheck, ConfigReloadObserver {
         decay = configuration.getDoubleElse(configName + ".decay", decay);
         setbackVL = configuration.getDoubleElse(configName + ".setbackvl", setbackVL);
         displayName = configuration.getStringElse(configName + ".displayname", checkName);
-      
+
         if (setbackVL == -1) setbackVL = Double.MAX_VALUE;
         updateExempted();
         onReload(configuration);
@@ -156,4 +156,3 @@ public class Check implements AbstractCheck, ConfigReloadObserver {
     }
 
 }
-
