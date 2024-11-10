@@ -8,6 +8,8 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.github.retrooper.packetevents.protocol.item.enchantment.type.EnchantmentTypes;
@@ -72,6 +74,13 @@ public class PacketPlayerAttack extends PacketListenerAbstract {
                             player.maxPlayerAttackSlow = 1;
                         }
                     } else if (!isLegacyPlayer && player.isSprinting) {
+                        // 1.9+ players who have attack speed cannot slow themselves twice in one tick because their attack cooldown gets reset on swing.
+                        if (player.maxPlayerAttackSlow > 0
+                                && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)
+                                && player.compensatedEntities.getSelf().getAttributeValue(Attributes.GENERIC_ATTACK_SPEED) < 16) { // 16 is a reasonable limit
+                            return;
+                        }
+
                         // 1.9+ player who might have been slowed, but we can't be sure
                         player.maxPlayerAttackSlow += 1;
                     }

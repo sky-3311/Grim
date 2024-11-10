@@ -72,6 +72,8 @@ public class PacketEntitySelf extends PacketEntity {
         final ValuedAttribute movementSpeed = ValuedAttribute.ranged(Attributes.GENERIC_MOVEMENT_SPEED, 0.1f, 0, 1024);
         movementSpeed.with(new WrapperPlayServerUpdateAttributes.Property("MOVEMENT_SPEED", 0.1f, new ArrayList<>()));
         trackAttribute(movementSpeed);
+        trackAttribute(ValuedAttribute.ranged(Attributes.GENERIC_ATTACK_SPEED, 4, 0, 1024)
+                .requiredVersion(player, ClientVersion.V_1_9));
         trackAttribute(ValuedAttribute.ranged(Attributes.GENERIC_JUMP_STRENGTH, 0.42f, 0, 32)
                 .requiredVersion(player, ClientVersion.V_1_20_5));
         trackAttribute(ValuedAttribute.ranged(Attributes.PLAYER_BLOCK_BREAK_SPEED, 1.0, 0, 1024)
