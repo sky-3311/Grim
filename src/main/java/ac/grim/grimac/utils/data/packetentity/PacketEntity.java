@@ -27,6 +27,8 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.potion.PotionType;
 import com.github.retrooper.packetevents.util.Vector3d;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class PacketEntity extends TypedPacketEntity {
     private ReachInterpolationData oldPacketLocation;
     private ReachInterpolationData newPacketLocation;
 
-    private Map<PotionType, Integer> potionsMap = null;
+    private Object2IntMap<PotionType> potionsMap = null;
     protected final Map<Attribute, ValuedAttribute> attributeMap = new IdentityHashMap<>();
 
     public PacketEntity(GrimPlayer player, EntityType type) {
@@ -202,8 +204,8 @@ public class PacketEntity extends TypedPacketEntity {
     }
 
     public OptionalInt getPotionEffectLevel(PotionType effect) {
-        final Integer amplifier = potionsMap == null ? null : potionsMap.get(effect);
-        return amplifier == null ? OptionalInt.empty() : OptionalInt.of(amplifier);
+        final int amplifier = potionsMap == null ? -1 : potionsMap.getInt(effect);
+        return amplifier == -1 ? OptionalInt.empty() : OptionalInt.of(amplifier);
     }
 
     public boolean hasPotionEffect(PotionType effect) {
@@ -212,13 +214,14 @@ public class PacketEntity extends TypedPacketEntity {
 
     public void addPotionEffect(PotionType effect, int amplifier) {
         if (potionsMap == null) {
-            potionsMap = new HashMap<>();
+            potionsMap = new Object2IntOpenHashMap<>();
+            potionsMap.defaultReturnValue(-1);
         }
         potionsMap.put(effect, amplifier);
     }
 
     public void removePotionEffect(PotionType effect) {
         if (potionsMap == null) return;
-        potionsMap.remove(effect);
+        potionsMap.removeInt(effect);
     }
 }
