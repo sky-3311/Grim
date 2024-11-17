@@ -11,6 +11,7 @@ import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.LogUtil;
 import ac.grim.grimac.utils.anticheat.MessageUtil;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -183,7 +184,7 @@ public class PunishmentManager implements ConfigReloadable {
 
                 group.violations.put(currentTime, check);
                 // Remove violations older than the defined time in the config
-                group.violations.entrySet().removeIf(time -> currentTime - time.getKey() > group.removeViolationsAfter);
+                group.violations.long2ObjectEntrySet().removeIf(time -> currentTime - time.getLongKey() > group.removeViolationsAfter);
             }
         }
     }
@@ -195,7 +196,7 @@ class PunishGroup {
     @Getter
     List<ParsedCommand> commands;
     @Getter
-    HashMap<Long, Check> violations = new HashMap<>();
+    Long2ObjectOpenHashMap<Check> violations = new Long2ObjectOpenHashMap<>();
     @Getter
     int removeViolationsAfter;
 

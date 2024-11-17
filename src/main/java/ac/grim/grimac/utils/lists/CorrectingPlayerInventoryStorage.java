@@ -7,6 +7,7 @@ import ac.grim.grimac.utils.inventory.InventoryStorage;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import org.bukkit.inventory.InventoryView;
 
 import java.util.*;
@@ -42,7 +43,8 @@ public class CorrectingPlayerInventoryStorage extends InventoryStorage {
     GrimPlayer player;
     // The key for this map is the inventory slot ID
     // The value for this map is the transaction that we care about
-    Map<Integer, Integer> serverIsCurrentlyProcessingThesePredictions = new HashMap<>();
+    // Returns -1 if the entry is null
+    Int2IntOpenHashMap serverIsCurrentlyProcessingThesePredictions = new Int2IntOpenHashMap();
     // A list of predictions the client has made for inventory changes
     // Remove if the server rejects these changes
     Map<Integer, Integer> pendingFinalizedSlot = new ConcurrentHashMap<>();
@@ -54,6 +56,7 @@ public class CorrectingPlayerInventoryStorage extends InventoryStorage {
     public CorrectingPlayerInventoryStorage(GrimPlayer player, int size) {
         super(size);
         this.player = player;
+        this.serverIsCurrentlyProcessingThesePredictions.defaultReturnValue(-1);
     }
 
     // 1.17+ clients send what slots they have changed.  This makes our jobs much easier.
@@ -75,11 +78,11 @@ public class CorrectingPlayerInventoryStorage extends InventoryStorage {
     @Override
     public void setItem(int item, ItemStack stack) {
         // If there is a more recent change to this one, don't override it
-        Integer finalTransaction = serverIsCurrentlyProcessingThesePredictions.get(item);
+        int finalTransaction = serverIsCurrentlyProcessingThesePredictions.get(item);
 
         // If the server is currently sending a packet to the player AND it is the final change to the slot
         // OR, the client was in control of setting this slot
-        if (finalTransaction == null || player.lastTransactionReceived.get() >= finalTransaction) {
+        if (finalTransaction == -1 || player.lastTransactionReceived.get() >= finalTransaction) {
             // This is the last change for this slot, try to resync this slot if possible
             pendingFinalizedSlot.put(item, GrimAPI.INSTANCE.getTickManager().currentTick + 5);
             serverIsCurrentlyProcessingThesePredictions.remove(item);
