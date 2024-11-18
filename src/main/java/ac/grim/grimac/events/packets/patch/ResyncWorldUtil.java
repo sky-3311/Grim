@@ -37,7 +37,8 @@ public class ResyncWorldUtil {
 
         // Takes 0.15ms or so to complete. Not bad IMO. Unsure how I could improve this other than sending packets async.
         // But that's on PacketEvents.
-        FoliaScheduler.getGlobalRegionScheduler().execute(GrimAPI.INSTANCE.getPlugin(), () -> {
+        FoliaScheduler.getRegionScheduler().execute(GrimAPI.INSTANCE.getPlugin(), player.bukkitPlayer.getWorld(),
+                minBlockX >> 4, minBlockZ >> 4, () -> {
             boolean flat = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13);
 
             if (player.bukkitPlayer == null) return;
