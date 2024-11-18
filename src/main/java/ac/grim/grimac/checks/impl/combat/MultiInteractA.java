@@ -59,7 +59,7 @@ public class MultiInteractA extends Check implements PostPredictionCheck {
         // we don't need to check pre-1.9 players here (no tick skipping)
         if (player.getClientVersion().isOlderThanOrEquals(ClientVersion.V_1_8)) return;
 
-        if (!player.skippedTickInActualMovement && predictionComplete.isChecked()) {
+        if (player.isTickingReliablyFor(3)) {
             for (String verbose : flags) {
                 flagAndAlert(verbose);
             }
