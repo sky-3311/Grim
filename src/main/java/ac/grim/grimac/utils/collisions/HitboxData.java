@@ -559,7 +559,7 @@ public enum HitboxData {
         } else if (version.isNewerThan(ClientVersion.V_1_19_3)) {
             return new HexCollisionBox(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D);
         } else if (version.isNewerThan(ClientVersion.V_1_12_2)) {
-            return CORAL_FAN.dynamic.fetch(player, item, version, data, x, y, z);
+            return CORAL_FAN.box.copy();
         }
         return GRASS_FERN.dynamic.fetch(player, item, version, data, x, y, z);
     }, StateTypes.PINK_PETALS),
