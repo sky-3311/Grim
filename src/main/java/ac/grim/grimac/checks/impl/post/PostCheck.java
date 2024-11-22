@@ -43,7 +43,7 @@ public class PostCheck extends Check implements PacketCheck, PostPredictionCheck
             // Okay, the user might be cheating, let's double check
             // 1.8 clients have the idle packet, and this shouldn't false on 1.8 clients
             // 1.9+ clients have predictions, which will determine if hidden tick skipping occurred
-            if (player.isTickingReliablyFor(3)) {
+            if (player.isTickingReliablyFor(3) && !player.uncertaintyHandler.lastVehicleSwitch.hasOccurredSince(0)) {
                 for (String flag : flags) {
                     flagAndAlert(flag);
                 }
