@@ -13,7 +13,6 @@ import ac.grim.grimac.utils.nmsutil.ReachUtils;
 import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.world.BlockFace;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import org.bukkit.util.Vector;
 
 import java.util.*;

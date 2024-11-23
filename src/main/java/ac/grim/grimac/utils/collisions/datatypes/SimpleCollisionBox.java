@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleCollisionBox implements CollisionBox {
@@ -19,6 +18,8 @@ public class SimpleCollisionBox implements CollisionBox {
 
     public double minX, minY, minZ, maxX, maxY, maxZ;
     private boolean isFullBlock = false;
+
+    SimpleCollisionBox[] boxes = new SimpleCollisionBox[ComplexCollisionBox.DEFAULT_MAX_COLLISION_BOX_SIZE];
 
     public SimpleCollisionBox() {
         this(0, 0, 0, 0, 0, 0, false);
@@ -233,11 +234,10 @@ public class SimpleCollisionBox implements CollisionBox {
             return isIntersected((SimpleCollisionBox) other);
         }
 
-        List<SimpleCollisionBox> boxes = new ArrayList<>();
-        other.downCast(boxes);
+        int size = other.downCast(boxes);
 
-        for (SimpleCollisionBox box : boxes) {
-            if (isIntersected(box)) return true;
+        for (int i = 0; i < size; i++) {
+            if (isIntersected(boxes[i])) return true;
         }
 
         return false;
@@ -266,6 +266,12 @@ public class SimpleCollisionBox implements CollisionBox {
     @Override
     public void downCast(List<SimpleCollisionBox> list) {
         list.add(this);
+    }
+
+    @Override
+    public int downCast(SimpleCollisionBox[] list) {
+        list[0] = this;
+        return 1;
     }
 
     @Override
