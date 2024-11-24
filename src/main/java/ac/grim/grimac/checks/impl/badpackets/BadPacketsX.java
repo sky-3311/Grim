@@ -22,17 +22,16 @@ public class BadPacketsX extends Check implements PacketCheck {
         super(player);
     }
 
-    int lastTick;
-    boolean didLastFlag;
-    Vector3i lastBreakLoc;
-    StateType lastBlockType;
+    private int lastTick;
+    private boolean didLastFlag;
+    private Vector3i lastBreakLoc;
+    private StateType lastBlockType;
 
     public final boolean noFireHitbox = player.getClientVersion().isOlderThanOrEquals(ClientVersion.V_1_15_2);
 
     public final void handle(PacketReceiveEvent event, WrapperPlayClientPlayerDigging dig, StateType block) {
         if (dig.getAction() != DiggingAction.START_DIGGING && dig.getAction() != DiggingAction.FINISHED_DIGGING)
             return;
-
 
         // Fixes false from breaking kelp underwater
         // The client sends two start digging packets to the server both in the same tick. BadPacketsX gets called twice, doesn't false the first time, but falses the second
