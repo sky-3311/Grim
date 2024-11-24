@@ -16,7 +16,7 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPl
 import static ac.grim.grimac.events.packets.patch.ResyncWorldUtil.resyncPosition;
 import static ac.grim.grimac.utils.nmsutil.BlockBreakSpeed.getBlockDamage;
 
-@CheckData(name = "BadPacketsZ", experimental = true)
+@CheckData(name = "BadPacketsZ")
 public class BadPacketsZ extends Check implements PacketCheck {
     public BadPacketsZ(final GrimPlayer player) {
         super(player);
