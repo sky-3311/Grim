@@ -16,7 +16,7 @@ import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.util.Vector3i;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerDigging;
 
-@CheckData(name = "BadPacketsX", experimental = true)
+@CheckData(name = "BadPacketsX")
 public class BadPacketsX extends Check implements PacketCheck {
     public BadPacketsX(GrimPlayer player) {
         super(player);
