@@ -680,7 +680,7 @@ public enum CollisionData {
     }, StateTypes.END_ROD, StateTypes.LIGHTNING_ROD),
 
     CAULDRON((player, version, data, x, y, z) -> {
-        if (version.isNewerThan(ClientVersion.getById(467))) { // changed in 19w13a, 1.14 Snapshot
+        if (version.isNewerThan(ClientVersion.V_1_13_2)) { // changed in 19w13a, 1.14 Snapshot
             return new ComplexCollisionBox(15,
                     new SimpleCollisionBox(0.0, 0.0, 0.0, 0.125, 1.0, 0.25, false),
                     new SimpleCollisionBox(0.0, 0.0, 0.75, 0.125, 1.0, 1.0, false),
