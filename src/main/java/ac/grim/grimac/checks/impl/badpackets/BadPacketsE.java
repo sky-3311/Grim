@@ -23,7 +23,8 @@ public class BadPacketsE extends Check implements PacketCheck {
             noReminderTicks = 0;
         } else if (WrapperPlayClientPlayerFlying.isFlying(event.getPacketType())) {
             noReminderTicks++;
-        } else if (event.getPacketType() == PacketType.Play.Client.STEER_VEHICLE) {
+        } else if (event.getPacketType() == PacketType.Play.Client.STEER_VEHICLE ||
+                event.getPacketType() == PacketType.Play.Client.VEHICLE_MOVE) {
             noReminderTicks = 0; // Exempt vehicles
         }
 
