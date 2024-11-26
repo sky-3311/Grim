@@ -63,7 +63,7 @@ dependencies {
     implementation("com.github.retrooper:packetevents-spigot:2.6.1-SNAPSHOT")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     implementation("club.minnced:discord-webhooks:0.8.0") // Newer versions include kotlin-stdlib, which leads to incompatibility with plugins that use Kotlin
-    implementation("it.unimi.dsi:fastutil:8.5.13")
+    implementation("it.unimi.dsi:fastutil:8.5.15")
     implementation("github.scarsz:configuralize:1.4.0")
 
     //implementation("com.github.grimanticheat:grimapi:1193c4fa41")
