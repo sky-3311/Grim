@@ -5,13 +5,12 @@ import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.MessageUtil;
+import ac.grim.grimac.utils.anticheat.update.BlockBreak;
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.player.DiggingAction;
 import com.github.retrooper.packetevents.util.Vector3i;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerDigging;
 
 import static ac.grim.grimac.events.packets.patch.ResyncWorldUtil.resyncPosition;
 import static ac.grim.grimac.utils.nmsutil.BlockBreakSpeed.getBlockDamage;
@@ -40,9 +39,9 @@ public class BadPacketsZ extends Check implements PacketCheck {
         return player.getClientVersion().isOlderThan(ClientVersion.V_1_14_4) || getBlockDamage(player, pos) < 1;
     }
 
-    public void handle(PacketReceiveEvent event, WrapperPlayClientPlayerDigging dig) {
-        if (dig.getAction() == DiggingAction.START_DIGGING) {
-            final Vector3i pos = dig.getBlockPosition();
+    public void handle(BlockBreak blockBreak) {
+        if (blockBreak.action == DiggingAction.START_DIGGING) {
+            final var pos = blockBreak.position;
 
             lastBlockWasInstantBreak = getBlockDamage(player, pos) >= 1;
             lastCancelledBlock = null;
@@ -50,8 +49,8 @@ public class BadPacketsZ extends Check implements PacketCheck {
             lastBlock = pos;
         }
 
-        if (dig.getAction() == DiggingAction.CANCELLED_DIGGING) {
-            final Vector3i pos = dig.getBlockPosition();
+        if (blockBreak.action == DiggingAction.CANCELLED_DIGGING) {
+            final var pos = blockBreak.position;
 
             if (shouldExempt(pos)) {
                 lastCancelledBlock = pos;
@@ -65,8 +64,7 @@ public class BadPacketsZ extends Check implements PacketCheck {
                 if (player.getClientVersion().isOlderThan(ClientVersion.V_1_14_4) || (!lastBlockWasInstantBreak && pos.equals(lastCancelledBlock))) {
                     if (flagAndAlert("action=CANCELLED_DIGGING" + ", last=" + MessageUtil.toUnlabledString(lastBlock) + ", pos=" + MessageUtil.toUnlabledString(pos))) {
                         if (shouldModifyPackets()) {
-                            event.setCancelled(true);
-                            player.onPacketCancel();
+                            blockBreak.cancel();
                             resyncPosition(player, pos);
                         }
                     }
@@ -79,15 +77,14 @@ public class BadPacketsZ extends Check implements PacketCheck {
             return;
         }
 
-        if (dig.getAction() == DiggingAction.FINISHED_DIGGING) {
-            final Vector3i pos = dig.getBlockPosition();
+        if (blockBreak.action == DiggingAction.FINISHED_DIGGING) {
+            final var pos = blockBreak.position;
 
             // when a player looks away from the mined block, they send a cancel, and if they look at it again, they don't send another start. (thanks mojang!)
             if (!pos.equals(lastCancelledBlock) && (!lastBlockWasInstantBreak || player.getClientVersion().isOlderThan(ClientVersion.V_1_14_4)) && !pos.equals(lastBlock)) {
                 if (flagAndAlert("action=FINISHED_DIGGING" + ", last=" + MessageUtil.toUnlabledString(lastBlock) + ", pos=" + MessageUtil.toUnlabledString(pos))) {
                     if (shouldModifyPackets()) {
-                        event.setCancelled(true);
-                        player.onPacketCancel();
+                        blockBreak.cancel();
                         resyncPosition(player, pos);
                     }
                 }
