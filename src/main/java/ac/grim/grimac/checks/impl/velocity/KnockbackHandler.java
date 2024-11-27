@@ -66,6 +66,7 @@ public class KnockbackHandler extends Check implements PostPredictionCheck {
             if (playerVelocity.getY() == -0.04) {
                 velocity.setVelocity(playerVelocity.add(new Vector3d(0, 1 / 8000D, 0)));
                 playerVelocity = velocity.getVelocity();
+                event.markForReEncode(true);
             }
 
             // Wrap velocity between two transactions
