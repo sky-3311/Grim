@@ -34,7 +34,7 @@ public class TickEndEvent implements Initable {
         }
 
         if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_11_2) && !Boolean.getBoolean("paper.explicit-flush")) {
-            LogUtil.warn("Reach.enable-post-packet=true but paper.explicit-flush=false, add -Dpaper.explicit-flush=true to your server's startup flags for fully functional extra reach accuracy.");
+            LogUtil.warn("Reach.enable-post-packet=true but paper.explicit-flush=false, add \"-Dpaper.explicit-flush=true\" to your server's startup flags for fully functional extra reach accuracy.");
         }
 
         // Inject so we can add the final transaction pre-flush event
