@@ -39,23 +39,47 @@ public enum MenuType {
 
     private final int id;
 
-    //TODO: could be optimized
-    public static MenuType getMenuType(int id) {
-        if (id < 0) return UNKNOWN;
+    private static final MenuType[] MENU_BY_ID_ARRAY;
+    static {
         ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
-        // versions under 1.20.3
+        MenuType[] menuTypes = MenuType.values();
+
+        int menuIdLimit;
+
         if (version.isOlderThan(ServerVersion.V_1_20_3)) {
-            if (id > 23) return UNKNOWN;
-            MenuType[] values = MenuType.values();
-            if (id >= 7) id++;
-            return values[id];
+            // versions under 1.20.3
+            menuIdLimit = 23;
+        } else {
+            // 1.20.3 & greater
+            menuIdLimit = menuTypes.length - 1; // Don't iterate the UNKNOWN menu type
         }
-        // 1.20.3 & greater
-        MenuType[] values = MenuType.values();
-        if (id >= values.length) return UNKNOWN;
-        return MenuType.values()[id];
+
+        MENU_BY_ID_ARRAY = new MenuType[menuIdLimit];
+
+        for (int itr = 0; itr < menuIdLimit; itr++) {
+            MENU_BY_ID_ARRAY[itr] = menuTypes[itr];
+        }
     }
 
+    public static MenuType getMenuType(int id) {
+        if (id < 0) {
+            return UNKNOWN;
+        }
+
+        ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
+        // versions under 1.20.3
+        if (version.isOlderThan(ServerVersion.V_1_20_3)) { // TODO: Can this be moved to the static block?
+            if (id >= 7) {
+                id++;
+            }
+        }
+
+        if (id >= MENU_BY_ID_ARRAY.length) {
+            return UNKNOWN;
+        }
+
+        return MENU_BY_ID_ARRAY[id];
+    }
 
     public static AbstractContainerMenu getMenuFromID(GrimPlayer player, Inventory playerInventory, MenuType type) {
         return switch (type) {
