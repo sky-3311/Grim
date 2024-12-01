@@ -129,6 +129,7 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
             vector.setY(vector.getY() - 0.05); // Make the player fall a bit
         } else { // Gliding doesn't have friction, we handle it differently
             PredictionEngineNormal.staticVectorEndOfTick(player, vector); // Lava and normal movement
+            vector.multiply(player.stuckSpeedMultiplier); // Prevent abusing setbacks to move out of blocks like webs
         }
 
         // stop 1.8 players from stepping onto 1.25 high blocks, because why not?
@@ -397,15 +398,15 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
         Vector3d safePosition = new Vector3d(position.getX(), position.getY(), position.getZ());
 
         // We must convert relative teleports to avoid them becoming client controlled in the case of setback
-        if (flags.isSet(RelativeFlag.X.getMask())) {
+        if (flags.has(RelativeFlag.X)) {
             safePosition = safePosition.withX(safePosition.getX() + lastKnownGoodPosition.pos.getX());
         }
 
-        if (flags.isSet(RelativeFlag.Y.getMask())) {
+        if (flags.has(RelativeFlag.Y)) {
             safePosition = safePosition.withY(safePosition.getY() + lastKnownGoodPosition.pos.getY());
         }
 
-        if (flags.isSet(RelativeFlag.Z.getMask())) {
+        if (flags.has(RelativeFlag.Z)) {
             safePosition = safePosition.withZ(safePosition.getZ() + lastKnownGoodPosition.pos.getZ());
         }
 
